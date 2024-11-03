@@ -2,12 +2,15 @@ import React, { useState, useEffect, useCallback } from 'react';
 import Tesseract from 'tesseract.js';
 import './TextRecognition.css'
 import Checkbox from "./Checkbox";
+import { useNavigate } from 'react-router-dom';
 
-const TextRecognition = ({ selectedFile }) => {
-  const [recognizedText, setRecognizedText] = useState('');
+
+const TextRecognition = ({ selectedFile, setItems }) => {
   const [isProcessing, setIsProcessing] = useState(false);
   const [progress, setProgress] = useState(0);
   const [error, setError] = useState(null);
+  const navigate = useNavigate();
+
 
   const preprocessImage = useCallback(async (imageFile) => {
     return new Promise((resolve, reject) => {
@@ -97,53 +100,10 @@ const TextRecognition = ({ selectedFile }) => {
     }).join('\n');
   }, []);
 
-  useEffect(() => {
-    const recognizeText = async () => {
-      if (!selectedFile) return;
+  const parseReceipt = useCallback((text) => {
+    if (!text) return null;
 
-      try {
-        setIsProcessing(true);
-        setError(null);
-        setProgress(0);
-
-        const processedImage = await preprocessImage(selectedFile);
-
-        // First pass with default settings
-        let result = await Tesseract.recognize(processedImage, 'eng', {
-          logger: m => {
-            if (m.status === 'recognizing text') {
-              setProgress(parseInt(m.progress * 100));
-            }
-          },
-          tessedit_char_whitelist: '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz$.,%-:/@&',
-          tessedit_pageseg_mode: '6',
-          preserve_interword_spaces: '1',
-          tessjs_create_hocr: '0',
-          tessjs_create_tsv: '0',
-          tessjs_create_box: '0',
-          tessjs_create_unlv: '0',
-          tessjs_create_osd: '0'
-        });
-
-        // Post-process the text
-        const processedText = postProcessText(result.data.text);
-        setRecognizedText(processedText);
-
-      } catch (err) {
-        setError('Error processing image: ' + err.message);
-        console.error('Tesseract error:', err);
-      } finally {
-        setIsProcessing(false);
-      }
-    };
-
-    recognizeText();
-  }, [selectedFile, preprocessImage, postProcessText]);
-
-  const parseReceipt = useCallback(() => {
-    if (!recognizedText) return null;
-
-    const lines = recognizedText.split('\n');
+    const lines = text.split('\n');
     const items = [];
     let subtotal = null;
     let tax = new Map();
@@ -172,6 +132,9 @@ const TextRecognition = ({ selectedFile }) => {
       const regularMatch = line.match(patterns.regularItem);
       if (regularMatch) {
         let [_, itemCode, description, taxCode, price] = regularMatch;
+        if (description.trim() === "VISA") {
+          return;
+        }
         if (taxCode.trim() === "P") {
           const reMatch = description.trim().match(/(.+?)\s+(TF|BF)/);
 
@@ -204,7 +167,7 @@ const TextRecognition = ({ selectedFile }) => {
       // if (feeMatch) {
       //   let [_, description, price] = regularMatch;
       //   if (taxCode.trim() === "P") {
-          
+
       //   let item = {
       //     type: 'fee',
       //     description: description.trim(),
@@ -260,77 +223,79 @@ const TextRecognition = ({ selectedFile }) => {
         }
       });
     });
-    console.log(recognizedText)
 
     return { items, subtotal, tax, total };
+  }, []);
 
-  }, [recognizedText]);
+  useEffect(() => {
+    let isMounted = true;
+
+    const recognizeText = async () => {
+      if (!selectedFile) return;
+
+      try {
+        setIsProcessing(true);
+        setError(null);
+        setProgress(0);
+
+        const processedImage = await preprocessImage(selectedFile);
+
+        const result = await Tesseract.recognize(processedImage, 'eng', {
+          logger: m => {
+            if (m.status === 'recognizing text' && isMounted) {
+              setProgress(parseInt(m.progress * 100));
+            }
+          },
+          tessedit_char_whitelist: '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz$.,%-:/@&',
+          tessedit_pageseg_mode: '6',
+          preserve_interword_spaces: '1',
+          tessjs_create_hocr: '0',
+          tessjs_create_tsv: '0',
+          tessjs_create_box: '0',
+          tessjs_create_unlv: '0',
+          tessjs_create_osd: '0'
+        });
+
+        if (!isMounted) return;
+
+        const processedText = postProcessText(result.data.text);
+        const parsedData = parseReceipt(processedText);
+        
+        if (parsedData && parsedData.items) {
+          // Set items and navigate immediately
+          setItems(parsedData.items);
+          navigate('/buyers');
+        }
+
+      } catch (err) {
+        if (isMounted) {
+          setError('Error processing image: ' + err.message);
+          console.error('Tesseract error:', err);
+        }
+      } finally {
+        if (isMounted) {
+          setIsProcessing(false);
+        }
+      }
+    };
+
+    recognizeText();
+
+    // Cleanup function
+    return () => {
+      isMounted = false;
+    };
+  }, [selectedFile, preprocessImage, postProcessText, parseReceipt, navigate, setItems]);
 
   return (
     <div className="text-recognition-container">
-      {isProcessing ? (
+      {isProcessing && (
         <div className="processing-status">
           <div>Processing image... {progress}%</div>
           <div className="progress-bar">
             <div className="progress-fill" style={{ width: `${progress}%` }}></div>
           </div>
         </div>
-      ) : error ? (
-        <div className="error-message">{error}</div>
-      ) : recognizedText && (
-        <>
-          <div className="back-container">
-                <button className="back-btn btn">&lt; back</button>
-          </div>
-          <div className="result-title">pick item for😊⬇️</div>
-          <div className="results-container">
-            {/* <div className="recognized-text">
-              <h3>Recognized Text:</h3>
-              <pre>{recognizedText}</pre>
-            </div> */}
-            
-            <div className="parsed-info">
-              {/* <h3>Parsed Information:</h3> */}
-              {(() => {
-                const parsed = parseReceipt();
-                return parsed && (
-                  <div className="receipt-details">
-                    <div className="items-list">
-                      {parsed.items.map((item, index) => (
-                        <div key={index} className="receipt-item">
-                          {item.type === 'regular' ? (
-                            <>
-                              <Checkbox label={`${item.description} - \$${item.price.toFixed(2)}`} />
-                              {/* <div>
-                                {item.description} - ${item.price.toFixed(2)}
-                              </div> */}
-                            </>
-                          ) : (
-                            <div>
-                              {item.quantity} @ ${item.unitPrice.toFixed(2)} ea = ${item.totalPrice.toFixed(2)}
-                            </div>
-                          )}
-                          
-                        </div>
-                      ))}
-                    </div>
-                    {/* <div className="receipt-summary">
-                      {parsed.subtotal && (
-                        <div>Subtotal: ${parsed.subtotal.toFixed(2)}</div>
-                      )}
-                      {parsed.tax && (
-                        <div>Tax: ${parsed.tax.toFixed(2)}</div>
-                      )}
-                      {parsed.total && (
-                        <div className="total">Total: ${parsed.total.toFixed(2)}</div>
-                      )}
-                    </div> */}
-                  </div>
-                );
-              })()}
-            </div>
-          </div>
-        </>
       )}
     </div>
   );

@@ -1,6 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import { useNavigate } from 'react-router-dom';
 import './HomeScreen.css'
+import TextRecognition from './TextRecognition';
 
 
 function HomeScreen({ setSelectedFile}) {
@@ -10,7 +11,8 @@ function HomeScreen({ setSelectedFile}) {
       if (file) {
         setSelectedFile(file); // Store the actual file
       }
-      navigate('/buyers');
+      
+      navigate('/process');
     }
   
     return (
