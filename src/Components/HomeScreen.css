@@ -1,0 +1,26 @@
+#receipt-upload-btn {
+    opacity: 0;
+    position: absolute;
+    z-index: -1;
+}
+
+
+
+.home-container {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-width: 800px;
+}
+
+.title {
+    font-size: 4.5rem;
+    font-weight: 900;
+    margin-bottom: 10px;
+}
+
+.subtitle {
+    font-size: 20px;
+}
