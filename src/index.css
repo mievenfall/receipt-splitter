@@ -93,7 +93,7 @@ img {
   vertical-align: middle;
 }
 
-label, button, input {
+button, input {
   padding: 10px 50px;
   border: none;
   border-radius: 10px;

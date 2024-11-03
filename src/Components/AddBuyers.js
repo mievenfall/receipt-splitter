@@ -50,6 +50,7 @@ function AddBuyers({ buyers, setBuyers}) {
             <div className="back-container">
                 <button className="back-btn btn" onClick={handleBackButton}>&lt; back</button>
             </div>
+            <div className="add-buyer-title">add buyers here😊⬇️</div>
             <div className="add-buyer-space">
                 <div className="buyer-info">
                     {buyers.map((buyer, index) => (

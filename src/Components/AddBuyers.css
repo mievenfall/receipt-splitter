@@ -12,6 +12,10 @@
 }
 
 
+.add-buyer-title {
+    font-size: 32px;
+}
+
 .add-buyer-space {
     background-color: var(--grey-color);
     width: 100%;

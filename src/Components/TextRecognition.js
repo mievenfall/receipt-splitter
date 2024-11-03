@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import Tesseract from 'tesseract.js';
 import './TextRecognition.css'
+import Checkbox from "./Checkbox";
 
 const TextRecognition = ({ selectedFile }) => {
   const [recognizedText, setRecognizedText] = useState('');
@@ -48,7 +49,7 @@ const TextRecognition = ({ selectedFile }) => {
             final = 0;   // Black
           } else {
             // Enhanced contrast for mid-range values (where @ symbols often are)
-            final = gray < 150 ? 0 : 255;
+            final = gray < 130 ? 0 : 255;
           }
 
           data[i] = final;
@@ -155,6 +156,8 @@ const TextRecognition = ({ selectedFile }) => {
       regularItem: /(\d+)\s+(.+?)\s+(\w+)\s+\$?(\d+\.\d{2})\s*/,
       // For quantity items (e.g., "2 @ $1.25 ea")
       quantityItem: /(\d+)\s*@\s*\$(\d+\.\d{2})\s*ea/i,
+      // For Fee
+      fee: /(.+)\s+(FEE)\s+\$?(\d+\.\d{2})\s*/i,
       // For subtotal
       subtotal: /SUBTOTAL\s+\$?(\d+\.\d{2})/i,
       // For tax
@@ -168,7 +171,14 @@ const TextRecognition = ({ selectedFile }) => {
       // Try matching regular items
       const regularMatch = line.match(patterns.regularItem);
       if (regularMatch) {
-        const [_, itemCode, description, taxCode, price] = regularMatch;
+        let [_, itemCode, description, taxCode, price] = regularMatch;
+        if (taxCode.trim() === "P") {
+          const reMatch = description.trim().match(/(.+?)\s+(TF|BF)/);
+
+          if (reMatch) {
+            [_, description, taxCode] = reMatch
+          }
+        }
         let item = {
           type: 'regular',
           itemCode,
@@ -188,6 +198,23 @@ const TextRecognition = ({ selectedFile }) => {
         return; // Skip to next line
       }
 
+      // Implement feeMatch later
+
+      // const feeMatch = line.match(patterns.fee);
+      // if (feeMatch) {
+      //   let [_, description, price] = regularMatch;
+      //   if (taxCode.trim() === "P") {
+          
+      //   let item = {
+      //     type: 'fee',
+      //     description: description.trim(),
+      //     price: parseFloat(price),
+      //   }
+      //   items.push(item);
+      //   }
+      //   return;
+      // }
+
       // Try matching quantity items
       const quantityMatch = line.match(patterns.quantityItem);
       if (quantityMatch) {
@@ -202,6 +229,7 @@ const TextRecognition = ({ selectedFile }) => {
         }
         return;
       }
+
 
       // Try matching subtotal
       const subtotalMatch = line.match(patterns.subtotal);
@@ -227,11 +255,12 @@ const TextRecognition = ({ selectedFile }) => {
 
     tax.entries().forEach(pair => {
       items.forEach(item => {
-        if (item['taxCode'] === pair[0]) {
+        if (item['taxCode'][0] === pair[0]) {
           item['finalPrice'] = item['price'] + (item['price'] * parseFloat(pair[1]) /100);
         }
       });
     });
+    console.log(recognizedText)
 
     return { items, subtotal, tax, total };
 
@@ -249,49 +278,59 @@ const TextRecognition = ({ selectedFile }) => {
       ) : error ? (
         <div className="error-message">{error}</div>
       ) : recognizedText && (
-        <div className="results-container">
-          <div className="recognized-text">
-            <h3>Recognized Text:</h3>
-            <pre>{recognizedText}</pre>
+        <>
+          <div className="back-container">
+                <button className="back-btn btn">&lt; back</button>
           </div>
-
-          <div className="parsed-info">
-            <h3>Parsed Information:</h3>
-            {(() => {
-              const parsed = parseReceipt();
-              return parsed && (
-                <div className="receipt-details">
-                  <div className="items-list">
-                    {parsed.items.map((item, index) => (
-                      <div key={index} className="receipt-item">
-                        {item.type === 'regular' ? (
-                          <div>
-                            {item.description} - ${item.price.toFixed(2)} - ${item.finalPrice.toFixed(2)}
-                          </div>
-                        ) : (
-                          <div>
-                            {item.quantity} @ ${item.unitPrice.toFixed(2)} ea = ${item.totalPrice.toFixed(2)}
-                          </div>
-                        )}
-                      </div>
-                    ))}
+          <div className="result-title">pick item for😊⬇️</div>
+          <div className="results-container">
+            {/* <div className="recognized-text">
+              <h3>Recognized Text:</h3>
+              <pre>{recognizedText}</pre>
+            </div> */}
+            
+            <div className="parsed-info">
+              {/* <h3>Parsed Information:</h3> */}
+              {(() => {
+                const parsed = parseReceipt();
+                return parsed && (
+                  <div className="receipt-details">
+                    <div className="items-list">
+                      {parsed.items.map((item, index) => (
+                        <div key={index} className="receipt-item">
+                          {item.type === 'regular' ? (
+                            <>
+                              <Checkbox label={`${item.description} - \$${item.price.toFixed(2)}`} />
+                              {/* <div>
+                                {item.description} - ${item.price.toFixed(2)}
+                              </div> */}
+                            </>
+                          ) : (
+                            <div>
+                              {item.quantity} @ ${item.unitPrice.toFixed(2)} ea = ${item.totalPrice.toFixed(2)}
+                            </div>
+                          )}
+                          
+                        </div>
+                      ))}
+                    </div>
+                    {/* <div className="receipt-summary">
+                      {parsed.subtotal && (
+                        <div>Subtotal: ${parsed.subtotal.toFixed(2)}</div>
+                      )}
+                      {parsed.tax && (
+                        <div>Tax: ${parsed.tax.toFixed(2)}</div>
+                      )}
+                      {parsed.total && (
+                        <div className="total">Total: ${parsed.total.toFixed(2)}</div>
+                      )}
+                    </div> */}
                   </div>
-                  <div className="receipt-summary">
-                    {parsed.subtotal && (
-                      <div>Subtotal: ${parsed.subtotal.toFixed(2)}</div>
-                    )}
-                    {/* {parsed.tax && (
-                      <div>Tax: ${parsed.tax.toFixed(2)}</div>
-                    )} */}
-                    {parsed.total && (
-                      <div className="total">Total: ${parsed.total.toFixed(2)}</div>
-                    )}
-                  </div>
-                </div>
-              );
-            })()}
+                );
+              })()}
+            </div>
           </div>
-        </div>
+        </>
       )}
     </div>
   );
