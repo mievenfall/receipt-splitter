@@ -11,14 +11,14 @@ function HomeScreen({ setSelectedFile}) {
       if (file) {
         setSelectedFile(file); // Store the actual file
       }
-      
+
       navigate('/process');
     }
   
     return (
       <div className="home-container">
         <div className="title">TARGET'S BILL PLITTER</div>
-        <p className="subtitle">start by uploading your receipt here</p>
+        <div className="subtitle">start by uploading your receipt here</div>
         <label className="receipt-upload btn" htmlFor="receipt-upload-btn">
           UPLOAD
         </label>

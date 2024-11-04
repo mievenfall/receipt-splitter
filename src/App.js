@@ -4,13 +4,14 @@ import HomeScreen from './Components/HomeScreen'
 import TextRecognition from './Components/TextRecognition';
 import React, {useState} from 'react';
 import AddBuyers from './Components/AddBuyers';
-import PickItems from './Components/PickItems';
+import PickItemsPage from './Components/PickItemsPage';
 import { Routes, Route, HashRouter } from "react-router-dom";
 
 function App() {
   const [selectedFile, setSelectedFile] = useState(null);
   const [buyers, setBuyers] = useState([]);
   const [items, setItems] = useState([]);
+  const [mapBuyerItems, setMapBuyerItems] = useState([]);
 
   return (
     <div className="App">
@@ -31,24 +32,15 @@ function App() {
                                         setBuyers={setBuyers}
                                         />} 
         />
-        <Route path="/result" element={<PickItems 
+        <Route path="/result" element={<PickItemsPage 
                                         items={items}
+                                        setItems={setItems}
                                         buyers={buyers}
                                         />} 
         />
 
       </Routes>
-      {/* <Footer /> */}
       </HashRouter>
-      {/* <HomeScreen 
-        setSelectedFile={setSelectedFile}
-        previewUrl={previewUrl}
-        setPreviewUrl={setPreviewUrl}
-      />
-      <AddBuyers />
-      <TextRecognition 
-        selectedFile={selectedFile}
-      /> */}
     </div>
     
   );

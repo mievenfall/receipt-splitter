@@ -136,7 +136,7 @@ const TextRecognition = ({ selectedFile, setItems }) => {
           return;
         }
         if (taxCode.trim() === "P") {
-          const reMatch = description.trim().match(/(.+?)\s+(TF|BF)/);
+          const reMatch = description.trim().match(/(.+?)\s+(TF|BF|N)/);
 
           if (reMatch) {
             [_, description, taxCode] = reMatch
@@ -148,7 +148,8 @@ const TextRecognition = ({ selectedFile, setItems }) => {
           description: description.trim(),
           taxCode: taxCode.trim(),
           price: parseFloat(price),
-          finalPrice: parseFloat(price)
+          finalPrice: parseFloat(price),
+          buyer: ""
         }
         items.push(item);
         prevItem = item
@@ -161,38 +162,36 @@ const TextRecognition = ({ selectedFile, setItems }) => {
         return; // Skip to next line
       }
 
-      // Implement feeMatch later
-
-      // const feeMatch = line.match(patterns.fee);
-      // if (feeMatch) {
-      //   let [_, description, price] = regularMatch;
-      //   if (taxCode.trim() === "P") {
-
-      //   let item = {
-      //     type: 'fee',
-      //     description: description.trim(),
-      //     price: parseFloat(price),
-      //   }
-      //   items.push(item);
-      //   }
-      //   return;
-      // }
-
       // Try matching quantity items
       const quantityMatch = line.match(patterns.quantityItem);
-      if (quantityMatch) {
+      if (quantityMatch && prevItem) {
         const [_, quantity, unitPrice] = quantityMatch;
+        // Remove the last added item since we'll be adding multiple copies
         items.pop();
-        prevItem['price'] = parseFloat(unitPrice);
-        prevItem['finalPrice'] = parseFloat(unitPrice);
-        let i = 0;
-        while (i < parseInt(quantity)) {
-          items.push(prevItem);
-          i++;
+        
+        // Update the unit price
+        const basePrice = parseFloat(unitPrice);
+        
+        // Add multiple items with indexed itemCodes
+        for (let i = 0; i < parseInt(quantity); i++) {
+          const newItem = {
+            ...prevItem,
+            price: basePrice,
+            finalPrice: basePrice,
+            itemCode: `${prevItem.itemCode}-${i}`
+          };
+          
+          items.push(newItem);
+          
+          // Update itemTypes map
+          if (itemTypes.has(newItem.taxCode.trim())) {
+            itemTypes.get(newItem.taxCode.trim()).push(newItem);
+          } else {
+            itemTypes.set(newItem.taxCode.trim(), [newItem]);
+          }
         }
         return;
       }
-
 
       // Try matching subtotal
       const subtotalMatch = line.match(patterns.subtotal);
@@ -216,13 +215,14 @@ const TextRecognition = ({ selectedFile, setItems }) => {
       }
     });
 
-    tax.entries().forEach(pair => {
+    // Apply tax calculations
+    for (const [taxCode, taxRate] of tax.entries()) {
       items.forEach(item => {
-        if (item['taxCode'][0] === pair[0]) {
-          item['finalPrice'] = item['price'] + (item['price'] * parseFloat(pair[1]) /100);
+        if (item.taxCode[0] === taxCode) {
+          item.finalPrice = item.price + (item.price * taxRate / 100);
         }
       });
-    });
+    }
 
     return { items, subtotal, tax, total };
   }, []);
@@ -262,7 +262,6 @@ const TextRecognition = ({ selectedFile, setItems }) => {
         const parsedData = parseReceipt(processedText);
         
         if (parsedData && parsedData.items) {
-          // Set items and navigate immediately
           setItems(parsedData.items);
           navigate('/buyers');
         }
@@ -281,7 +280,6 @@ const TextRecognition = ({ selectedFile, setItems }) => {
 
     recognizeText();
 
-    // Cleanup function
     return () => {
       isMounted = false;
     };

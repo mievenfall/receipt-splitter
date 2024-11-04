@@ -1,0 +1,17 @@
+.navigation-btns {
+    display: flex;
+    flex-direction: row;
+    margin-top: 20px;
+    align-items: center;
+    width: 100%;
+    min-width: 775px;
+    justify-content: space-between;
+}
+
+.prev-btn, .next-btn, .done-add-btn {
+    margin-bottom: 0;
+}
+
+.receipt-item {
+    height: 50px;
+}
