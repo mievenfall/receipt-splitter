@@ -1,9 +1,9 @@
 .checkbox-wrapper {
     /* border: #00a7a6 1px solid; */
     /* width: 92%; */
-    margin: 0.2em 0;
+    margin: 5px 0;
     padding: 0.2em 4%;
-    border-radius: 5px;
+    border-radius: 7px;
     /* background-color: #00a7a6; */
 }
 
@@ -41,8 +41,8 @@
     -webkit-appearance: none;
     appearance: none;
     /* creating a custom design */
-    width: 1.6em;
-    height: 1.6em;
+    width: 30px;
+    height: 32px;
     /* border-radius: 0.15em; */
     margin: 0 !important;
     /* border: 0.15em solid #8e8e8e; */
@@ -73,7 +73,7 @@ input.checked::before {
 .buyerName {
     background-color: var(--warm-color);
     color: white;
-    padding: 0 10px;
+    padding: 0 20px;
     border-radius: 5px;
     margin-right: 20px;
 }

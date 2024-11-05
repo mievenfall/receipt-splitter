@@ -27,15 +27,28 @@
 
 .buyer-row {
     min-width: 735px;
+    display: flex;
+
 }
 
 .name-input {
     padding: 10px 20px !important;
     margin-right: 20px;
+    margin-bottom: 5px;
+    margin-top: 5px;
     min-width: 515px;
     width: calc(100% - 220px);
 }   
 
+.remove-btn {
+    margin-bottom: 5px;
+    margin-top: 5px;
+    height: 50px;
+}
+
+.add-btn {
+    margin-top:15px;
+}
 
 .out-of-range {
     display: flex;
@@ -43,6 +56,7 @@
     align-items: center;
     justify-content: center;
     font-size: 20px;
+    margin-top: 10px;
 }
 
 .done-container {
@@ -52,4 +66,20 @@
 .done-btn {
     margin-bottom: 0;
     margin-top: 20px;
+}
+
+.btn-disabled {
+    display: none;
+}
+
+.input-error-container {
+    min-width: 515px;
+    width: calc(100% - 220px);
+    margin-right: 20px;
+
+}
+
+.error-message {
+    color: var(--warm-color);
+    padding-left: 5px;
 }

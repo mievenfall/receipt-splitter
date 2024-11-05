@@ -1,5 +1,5 @@
 
-.pick-items-container {
+.result-container {
     min-height: 100vh;
     display: flex;
     flex-direction: column;
@@ -7,12 +7,12 @@
     justify-content: center;
   }
   
-  .pick-items-title {
+  .result-title {
     font-size: 32px;
   }
   
   
-  .pick-items-field {
+  .result-field {
     background-color: var(--grey-color);
     width: 100%;
     border-radius: 10px;
@@ -53,6 +53,10 @@
     margin-bottom: 0;
 }
 
-.receipt-item {
-    height: 50px;
+.result-item {
+  min-height: 50px;
+}
+
+.done-container {
+  height: 70px;
 }

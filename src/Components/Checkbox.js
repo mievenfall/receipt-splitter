@@ -1,9 +1,6 @@
-import { useState } from "react";
 import "./Checkbox.css"
 
 const Checkbox = ({ description, price, itemCode, isSelected, onToggle, thisItem, currentBuyerName }) => {
-  const [isFilled, setIsFilled] = useState(false);
-  
   const filled = { backgroundColor: '#3B8A7F' };
   const unfilled = { backgroundColor: "#ffffff" };
   const checkedBoxUnfilled = { border: "none" };
@@ -14,10 +11,10 @@ const Checkbox = ({ description, price, itemCode, isSelected, onToggle, thisItem
 
   const handleChange = () => {
     const newCheckedState = !isSelected;
-    setIsFilled(newCheckedState);
     onToggle(itemCode, newCheckedState, thisItem);
   };
-  let content;
+
+  // If item is already selected by another buyer
   if (thisItem.buyer !== "" && thisItem.buyer !== currentBuyerName) {
     return (
         <div className="checkbox-wrapper" style={cannotChoose}>
@@ -38,31 +35,29 @@ const Checkbox = ({ description, price, itemCode, isSelected, onToggle, thisItem
             </div>
           </label>
         </div>
-    
     );
   }
-  else {
-    return (
-      <div className="checkbox-wrapper" style={isFilled ? filled : unfilled}>
-        <label className="checkbox-label">
-          <input 
-            id={`checkbox-${itemCode}`}
-            className={isSelected ? "checked" : ""} 
-            type="checkbox" 
-            style={isFilled ? checkedBoxFilled : checkedBoxUnfilled} 
-            checked={isSelected}
-            onChange={handleChange}
-          />
-          <div className="checkbox-title" style={isFilled ? textFilled : textUnfilled}>
-            <div className="checkbox-description">{description}</div>
-            <div className="checkbox-price">${price}</div>      
-            <div className="buyerName-container"></div>
-          </div>
-        </label>
-      </div>
-    );
-  }
-  
+
+  // Regular selectable item
+  return (
+    <div className="checkbox-wrapper" style={isSelected ? filled : unfilled}>
+      <label className="checkbox-label">
+        <input 
+          id={`checkbox-${itemCode}`}
+          className={isSelected ? "checked" : ""} 
+          type="checkbox" 
+          style={isSelected ? checkedBoxFilled : checkedBoxUnfilled} 
+          checked={isSelected}
+          onChange={handleChange}
+        />
+        <div className="checkbox-title" style={isSelected ? textFilled : textUnfilled}>
+          <div className="checkbox-description">{description}</div>
+          <div className="checkbox-price">${price}</div>      
+          <div className="buyerName-container"></div>
+        </div>
+      </label>
+    </div>
+  );
 };
 
 export default Checkbox;

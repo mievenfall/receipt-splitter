@@ -1,0 +1,82 @@
+.result-tab-wrapper {
+    /* border: #00a7a6 1px solid; */
+    /* width: 92%; */
+    margin: 5px 0;
+    padding: 0.2em 4%;
+    border-radius: 7px;
+    background-color: #ffffff;
+}
+
+.result-tab-label {
+    display: flex;
+    margin: 0.3em 0;
+    cursor: pointer;
+
+}
+
+.result-tab-title {
+    margin-left: 1em;
+    font-size: 20px;
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    
+}
+
+.result-tab-description {
+    width: 250px;
+}
+
+.result-tab-price {
+    width: 100px;
+
+}
+
+.checkbox-placeholder {
+    /* removing default appearance */
+    -webkit-appearance: none;
+    appearance: none;
+    /* creating a custom design */
+    width: 30px;
+    height: 32px;
+    /* border-radius: 0.15em; */
+    margin: 0 !important;
+    /* border: 0.15em solid #8e8e8e; */
+    outline: none;
+    padding: 0;
+}
+
+.result-tab-num-items {
+    width: calc(100% - 350px);
+    display: flex;
+    justify-content: flex-end;
+    padding-right: 40px;
+}
+/* 
+.items-list {
+    display: flex;
+    flex-direction: column;
+} */
+
+/*---------------*/
+
+.result-list-items-container {
+    margin-bottom: 10px;
+    padding: 0.2em 4%;
+    display: none;
+}
+
+.result-list-items-item {
+    display: flex;
+    flex-direction: row;
+    margin-left: 20px;
+}
+
+.result-list-items-title {
+    /* margin-left: 1em; */
+    font-size: 16px;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+

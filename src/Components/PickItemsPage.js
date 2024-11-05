@@ -1,22 +1,33 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Checkbox from "./Checkbox";
 import "./PickItemsPage.css";
 
-const PickItemsPage = ({ items, setItems, buyers }) => {
+const PickItemsPage = ({ items, setItems, buyers, setBuyers }) => {
   const navigate = useNavigate();
   const [currentBuyerIndex, setCurrentBuyerIndex] = useState(0);
-  // Create a map to store selected items for each buyer
-  const [buyerSelections, setBuyerSelections] = useState(
-    buyers.reduce((acc, buyer) => ({
+  // Initialize buyerSelections based on existing item assignments
+  const [buyerSelections, setBuyerSelections] = useState(() => {
+    const initialSelections = buyers.reduce((acc, buyer) => ({
       ...acc,
       [buyer.name]: []
-    }), {})
-  );
+    }), {});
 
+    // Populate initial selections based on items' buyer property
+    items.forEach(item => {
+      if (item.buyer) {
+        initialSelections[item.buyer] = [
+          ...(initialSelections[item.buyer] || []),
+          item.itemCode
+        ];
+      }
+    });
+
+    return initialSelections;
+  });
 
   const handleBackButton = () => {
-    navigate('/buyers');
+    navigate('/');
   };
 
   const handleNext = () => {
@@ -34,7 +45,6 @@ const PickItemsPage = ({ items, setItems, buyers }) => {
   const handleItemToggle = (itemCode, isSelected, thisItem) => {
     const currentBuyer = buyers[currentBuyerIndex].name;
     
-    // Update items state
     setItems(prevItems => 
       prevItems.map(item => 
         item.itemCode === itemCode 
@@ -42,28 +52,37 @@ const PickItemsPage = ({ items, setItems, buyers }) => {
           : item
       )
     );
-
+  
+    const newSelections = isSelected 
+      ? [...buyerSelections[currentBuyer], itemCode]
+      : buyerSelections[currentBuyer].filter(item => item !== itemCode);
+  
     setBuyerSelections(prevSelections => ({
       ...prevSelections,
-      [currentBuyer]: isSelected 
-        ? [...prevSelections[currentBuyer], itemCode]
-        : prevSelections[currentBuyer].filter(item => item !== itemCode)
+      [currentBuyer]: newSelections
     }));
   };
 
+  const handleDoneButton = () => {
+    navigate('/result');
+  }
+
   const currentBuyer = buyers[currentBuyerIndex];
-  const currentSelections = buyerSelections[currentBuyer.name] || [];
-  console.log(items);
+  
+  // Determine if an item is selected based on both buyerSelections and item.buyer
+  const isItemSelected = (item) => {
+    return item.buyer === currentBuyer.name;
+  }
 
   return (
-    <div className="text-recognition-container">
+    <div className="pick-items-container">
       <div className="back-container">
         <button className="back-btn btn" onClick={handleBackButton}>&lt; back</button>
       </div>
 
-      <div className="result-title">pick items for {currentBuyer.name}😊⬇️</div>
+      <div className="pick-items-title">pick items for {currentBuyer.name}😊⬇️</div>
 
-      <div className="results-container">
+      <div className="pick-items-field">
         <div className="parsed-info">
           <div className="receipt-details">
             <div className="items-list">
@@ -74,7 +93,7 @@ const PickItemsPage = ({ items, setItems, buyers }) => {
                       description={item.description}
                       price={item.price.toFixed(2)}
                       itemCode={item.itemCode}
-                      isSelected={currentSelections.includes(item.itemCode)}
+                      isSelected={isItemSelected(item)}
                       onToggle={handleItemToggle}
                       thisItem={item}
                       currentBuyerName={currentBuyer.name}
@@ -119,17 +138,11 @@ const PickItemsPage = ({ items, setItems, buyers }) => {
         ) : (
           <button
             className="btn done-add-btn"
-            onClick={handleNext}
-            disabled={currentBuyerIndex === buyers.length - 1}
+            onClick={handleDoneButton}
           >
             done
           </button>
         )}
-      </div>
-
-      {/* For debugging - you can remove this */}
-      <div style={{ padding: '20px', fontSize: '12px', color: '#666' }}>
-        Current selections for {currentBuyer.name}: {currentSelections.join(', ')}
       </div>
     </div>
   );
