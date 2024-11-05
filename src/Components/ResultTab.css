@@ -1,17 +1,23 @@
+.tab-container {
+    margin-bottom: 8px;
+}
+
 .result-tab-wrapper {
-    /* border: #00a7a6 1px solid; */
-    /* width: 92%; */
     margin: 5px 0;
     padding: 0.2em 4%;
     border-radius: 7px;
-    background-color: #ffffff;
+    background-color: white;
+    transition: background-color 0.3s ease;
+}
+
+.result-tab-wrapper.active-tab {
+    background-color: var(--teal-color);
 }
 
 .result-tab-label {
     display: flex;
     margin: 0.3em 0;
     cursor: pointer;
-
 }
 
 .result-tab-title {
@@ -20,7 +26,11 @@
     display: flex;
     flex-direction: row;
     width: 100%;
-    
+    color: #0D0D0D;
+}
+
+.result-tab-title.active-text {
+    color: white;
 }
 
 .result-tab-description {
@@ -29,19 +39,14 @@
 
 .result-tab-price {
     width: 100px;
-
 }
 
 .checkbox-placeholder {
-    /* removing default appearance */
     -webkit-appearance: none;
     appearance: none;
-    /* creating a custom design */
     width: 30px;
     height: 32px;
-    /* border-radius: 0.15em; */
     margin: 0 !important;
-    /* border: 0.15em solid #8e8e8e; */
     outline: none;
     padding: 0;
 }
@@ -52,31 +57,34 @@
     justify-content: flex-end;
     padding-right: 40px;
 }
-/* 
-.items-list {
-    display: flex;
-    flex-direction: column;
-} */
 
-/*---------------*/
+.result-list-items {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease-out;
+}
+
+.result-list-items.open {
+    max-height: 500px; 
+    transition: max-height 0.3s ease-in;
+}
 
 .result-list-items-container {
     margin-bottom: 10px;
     padding: 0.2em 4%;
-    display: none;
+    display: flex;
 }
 
 .result-list-items-item {
     display: flex;
     flex-direction: row;
     margin-left: 20px;
+    padding: 4px 0;
 }
 
 .result-list-items-title {
-    /* margin-left: 1em; */
     font-size: 16px;
     display: flex;
     flex-direction: column;
     width: 100%;
 }
-
