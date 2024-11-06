@@ -28,21 +28,21 @@
 .buyer-row {
     min-width: 735px;
     display: flex;
+    margin: 5px 0;
 
 }
 
 .name-input {
     padding: 10px 20px !important;
     margin-right: 20px;
-    margin-bottom: 5px;
-    margin-top: 5px;
+    margin-bottom: 0;
     min-width: 515px;
-    width: calc(100% - 220px);
+    width: 100%;
 }   
 
 .remove-btn {
-    margin-bottom: 5px;
-    margin-top: 5px;
+    margin-bottom: 0;
+    margin-top: 0;
     height: 50px;
 }
 

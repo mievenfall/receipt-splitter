@@ -1,9 +1,9 @@
 .tab-container {
-    margin-bottom: 8px;
+    height: 100%;
 }
 
 .result-tab-wrapper {
-    margin: 5px 0;
+    margin: 5px 0 0 0;
     padding: 0.2em 4%;
     border-radius: 7px;
     background-color: white;
@@ -16,7 +16,7 @@
 
 .result-tab-label {
     display: flex;
-    margin: 0.3em 0;
+    margin: 6px 0;
     cursor: pointer;
 }
 

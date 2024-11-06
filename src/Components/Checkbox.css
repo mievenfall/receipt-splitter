@@ -1,10 +1,7 @@
 .checkbox-wrapper {
-    /* border: #00a7a6 1px solid; */
-    /* width: 92%; */
     margin: 5px 0;
     padding: 0.2em 4%;
     border-radius: 7px;
-    /* background-color: #00a7a6; */
 }
 
 .checkbox-wrapper .filled{
@@ -13,7 +10,7 @@
 
 .checkbox-label {
     display: flex;
-    margin: 0.3em 0;
+    margin: 6px 0;
     cursor: pointer;
 
 }
@@ -37,15 +34,11 @@
 }
 
 .checkbox-wrapper input[type="checkbox"] {
-    /* removing default appearance */
     -webkit-appearance: none;
     appearance: none;
-    /* creating a custom design */
     width: 30px;
     height: 32px;
-    /* border-radius: 0.15em; */
     margin: 0 !important;
-    /* border: 0.15em solid #8e8e8e; */
     outline: none;
     padding: 0;
 }
