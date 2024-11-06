@@ -9,6 +9,8 @@
   
   .pick-items-title {
     font-size: 32px;
+    min-width: 775px;
+    text-align: center;
   }
   
   
@@ -56,3 +58,52 @@
 .receipt-item {
     height: 50px;
 }
+
+
+@media screen and (max-width: 1280px) {
+  .pick-items-container {
+      width: 100%;
+      padding: 5vh 0 ;
+      
+  }
+  
+  .back-container {
+      width: 90%;
+      min-width: 0;
+  }
+  
+  .pick-items-title {
+      font-size: 24px;
+      width: 90%;
+      min-width: 0;
+  }
+  
+  .pick-items-field {
+      width: 90%;
+      min-width: 0;
+      height: 60vh;
+      border: 10px solid var(--grey-color);
+  }
+  
+  .navigation-btns {
+    display: flex;
+    flex-direction: row;
+    margin-top: 20px;
+    align-items: center;
+    width: 90%;
+    min-width: 0;
+    justify-content: space-between;
+  }
+
+  .prev-btn, .next-btn, .done-add-btn {
+      margin-bottom: 0;
+  }
+
+  .receipt-item {
+      height: 41px;
+  }
+
+  .text-center{
+    font-size: 12px;
+  }
+}    

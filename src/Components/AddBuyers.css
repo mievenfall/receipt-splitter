@@ -14,6 +14,8 @@
 
 .add-buyer-title {
     font-size: 32px;
+    min-width: 775px;
+    text-align: center;
 }
 
 .add-buyer-space {
@@ -83,3 +85,68 @@
     color: var(--warm-color);
     padding-left: 5px;
 }
+
+
+
+@media screen and (max-width: 1280px) {
+    .add-buyer-container {
+        width: 100%;
+        padding: 5vh 0 ;
+        
+    }
+    
+    .back-container {
+        width: 90%;
+        min-width: 0;
+    }
+    
+    
+    .add-buyer-title {
+        font-size: 24px;
+        width: 90%;
+        min-width: 0;
+    }
+    
+    .add-buyer-space {
+        padding: 10PX;
+        width: 90%;
+        min-width: 0;
+        height: 60vh;
+    }
+    
+    .buyer-row {
+        min-width: 100%;
+
+    
+    }
+    
+    .name-input {
+        min-width:0;
+        font-size: 14px;
+    }   
+    
+    .remove-btn {
+        height: 41px;
+    }
+  
+    .out-of-range {
+        font-size: 14px;
+    }
+    
+    .done-container {
+        height: 61px;
+    }
+    
+   
+    .input-error-container {
+        min-width: 0;
+        width: calc(100% - 120px);
+        margin-right: 5px;
+    
+    }
+    
+    .error-message {
+        padding-left: 7px;
+        font-size: 12px;
+    }
+}    

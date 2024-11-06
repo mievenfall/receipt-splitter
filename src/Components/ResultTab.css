@@ -88,3 +88,103 @@
     flex-direction: column;
     width: 100%;
 }
+
+.line-break {
+    width: 90%;
+    margin: auto;
+    margin-bottom: 5px;
+    height: 1px;
+    border-bottom: 1px solid white;
+}
+
+
+@media screen and (max-width: 1280px) {
+
+    .result-tab-title {
+        font-size: 14px;
+        
+    }
+    
+    .result-tab-description {
+        width: 120px;
+    }
+    
+    .result-tab-price {
+        width: 60px;
+    }
+   
+    input.checked::before {
+        font-size: 14px;
+        display:none;
+    }
+
+
+    .result-tab-num-items {
+        width: calc(100% - 180px);
+        text-align: right;
+        padding-right: 10px;
+    }
+
+
+    .result-tab-wrapper {
+        margin: 5px 0 0 0;
+        padding: 0.2em 4%;
+        border-radius: 7px;
+        background-color: white;
+        transition: background-color 0.3s ease;
+        
+    }
+    
+    .result-tab-wrapper.active-tab {
+        background-color: var(--teal-color);
+    }
+    
+    .result-tab-label {
+        display: flex;
+        margin: 6px 0;
+        cursor: pointer;
+        height: 23px;
+    }
+
+    .checkbox-placeholder {
+        width: 0px;
+    }
+    
+
+    .result-list-items {
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.3s ease-out;
+    }
+    
+    .result-list-items.open {
+        max-height: 500px; 
+        transition: max-height 0.3s ease-in;
+    }
+    
+    .result-list-items-container {
+        margin-bottom: 10px;
+        padding: 0.2em 4%;
+        display: flex;
+    }
+    
+    .result-list-items-item {
+        display: flex;
+        flex-direction: row;
+        margin-left: 10px;
+        padding: 2px 0;
+    }
+    
+    .result-list-items-title {
+        font-size: 12px;
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+    }
+    
+    #title {
+        height: auto;
+
+    }
+    
+  } 

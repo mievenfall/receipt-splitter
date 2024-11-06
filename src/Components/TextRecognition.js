@@ -289,7 +289,7 @@ const TextRecognition = ({ selectedFile, setItems }) => {
     <div className="text-recognition-container">
       {isProcessing && (
         <div className="processing-status">
-          <div>Processing image... {progress}%</div>
+          <div>processing image ... {progress}%</div>
           <div className="progress-bar">
             <div className="progress-fill" style={{ width: `${progress}%` }}></div>
           </div>

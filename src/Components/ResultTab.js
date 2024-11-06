@@ -24,12 +24,18 @@ const ResultTab = ({ buyerPurchase }) => {
                 <div className="result-list-items-container">
                     <div className="checkbox-placeholder"></div>
                     <div className="result-list-items-title">
+                        <div className="result-list-items-item" id="title">
+                            <div className="result-tab-description">item's name</div>
+                            <div className="result-tab-price">final price</div>
+                            <div className="result-tab-num-items">before tax</div>
+                        </div>
+                        <div className="line-break"></div>
                         {buyerPurchase.items.map((item, itemIndex) => (
                             <div key={itemIndex} className="result-list-items-item">
-                                <div className="result-tab-description">{item.description}</div>
-                                <div className="result-tab-price">${item.finalPrice.toFixed(2)}</div>
-                                <div className="result-tab-num-items">${item.price.toFixed(2)} --- before tax</div>
-                            </div>
+                            <div className="result-tab-description">{item.description}</div>
+                            <div className="result-tab-price">${item.finalPrice.toFixed(2)}</div>
+                            <div className="result-tab-num-items">${item.price.toFixed(2)}</div>
+                        </div>
                         ))}
                     </div>
                 </div>

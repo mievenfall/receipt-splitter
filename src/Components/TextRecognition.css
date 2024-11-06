@@ -9,6 +9,7 @@
 .processing-status {
   text-align: center;
   margin: 20px 0;
+  width: 400px;
 }
 
 .progress-bar {
@@ -17,7 +18,7 @@
   background-color: var(--grey-color);
   border-radius: 10px;
   overflow: hidden;
-  margin-top: 10px;
+  /* margin-top: 10px; */
 }
 
 .progress-fill {
